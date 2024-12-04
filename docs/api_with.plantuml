@@ -1,0 +1,86 @@
+@startuml marked
+actor User
+
+box "API Gateway: NGINX" #LightBlue
+participant API_Gateway
+end box
+
+box "System: Flask (Python)" #LightGoldenRodYellow
+participant System
+end box
+
+box "Rate Limiter" #LightGrey
+participant Rate_Limiter
+end box
+
+box "Data Layer: MySQL" #LightGreen
+participant Database
+end box
+
+box "SMS Service: Twilio" #LightYellow
+participant SMS_Service
+end box
+
+box "Logging Service: ElasticSearch" #LightCyan
+participant Logging_Service
+end box
+
+== Phone Number Submission ==
+User -> API_Gateway: POST /phone/submit
+API_Gateway -> Rate_Limiter: Check rate limit
+alt [Rate limit exceeded]
+    Rate_Limiter -> User: 429 Too Many Requests
+else [Within rate limit]
+    API_Gateway -> System: Forward request
+    System -> System: Validate phone number
+    alt [Invalid phone number]
+        System -> Logging_Service: Log invalid phone number
+        System -> User: 400 Invalid phone number
+    else [Valid phone number]
+        System -> Logging_Service: Log successful submission
+        System -> Database: Store phone number
+        System -> User: 200 Phone number submitted
+    end
+end
+
+== Confirmation Code Submission ==
+User -> API_Gateway: POST /code/send
+API_Gateway -> Rate_Limiter: Check rate limit
+alt [Rate limit exceeded]
+    Rate_Limiter -> User: 429 Too Many Requests
+else [Within rate limit]
+    API_Gateway -> System: Forward request
+    System -> System: Generate confirmation code
+    System -> Database: Store code with expiry
+    System -> SMS_Service: Send SMS
+    alt [SMS service failure]
+        SMS_Service -> Logging_Service: Log SMS failure
+        System -> SMS_Service: Retry sending SMS (loop)
+    else [SMS sent successfully]
+        SMS_Service -> Logging_Service: Log SMS success
+        System -> User: 200 Code sent
+    end
+end
+
+== Code Resend Request ==
+User -> API_Gateway: POST /code/resend
+API_Gateway -> Rate_Limiter: Check rate limit
+alt [Rate limit exceeded]
+    Rate_Limiter -> User: 429 Too Many Requests
+else [Within rate limit]
+    API_Gateway -> System: Forward request
+    System -> Database: Fetch code from database
+    alt [Code invalid or expired]
+        System -> Logging_Service: Log failed verification
+        System -> User: 400 Invalid or expired code
+    else [Code valid]
+        System -> Logging_Service: Log successful verification
+        System -> User: 200 Verification successful
+    end
+end
+
+== Periodic Backup ==
+System -> Database: Perform periodic backup
+Database -> Logging_Service: Log backup completion
+
+@enduml

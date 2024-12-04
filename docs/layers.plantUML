@@ -1,0 +1,37 @@
+@startuml layers
+title API Layered Architecture Diagram
+
+rectangle "User Interface Layer" {
+    actor "User" as User
+    rectangle "Frontend (Web/App)" as Frontend
+}
+
+rectangle "API Layer" {
+    rectangle "API Gateway" as APIGateway
+}
+
+rectangle "Business Logic Layer" {
+    rectangle "Rate Limiter" as RateLimiter
+    rectangle "Core System" as System
+    rectangle "SMS Service" as SMSService
+    rectangle "Logging Service" as LoggingService
+}
+
+rectangle "Data Layer" {
+    database "Database" as Database
+}
+
+User -> Frontend: Submit phone number\nRequest code\nVerify code
+Frontend -> APIGateway: REST API Calls\n(e.g., /phone/submit)
+APIGateway -d-> RateLimiter: Check rate limits
+RateLimiter --> APIGateway: Allow/Deny
+
+APIGateway -> System: Process request
+System -d-> Database: Store/Fetch user data
+System -u-> SMSService: Send confirmation code
+System -> LoggingService: Log events
+SMSService -> LoggingService: Log SMS status
+
+Frontend <-- APIGateway: Responses\n(200 OK, 400 Error, etc.)
+
+@enduml

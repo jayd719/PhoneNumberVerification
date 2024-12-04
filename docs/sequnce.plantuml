@@ -1,0 +1,98 @@
+@startuml backup
+actor User
+participant "System" as App
+participant "SMS Service"
+participant "Database"
+participant "LoggingService"
+participant "Backup Service"
+
+' Initial phone number submission
+User -> App: Submit phone number
+activate App
+App -> App: Validate phone number format
+alt Invalid phone number
+    App -> User: Error: Invalid phone number
+    App -> LoggingService: Log invalid phone number attempt
+    deactivate App
+else Valid phone number
+    App -> Database: Check sliding window rate limit
+    alt Rate limit exceeded
+        App -> User: Error: Too many requests. Try again in X minutes.
+        App -> LoggingService: Log rate limit exceeded
+        deactivate App
+    else Rate limit within limits
+        App -> App: Generate 6-digit confirmation code
+        App -> App: Generate expiry timestamp
+        App -> Database: Store encrypted phone number, code, and expiry
+        App -> LoggingService: Log code generation event
+
+        ' Send code via SMS
+        App -> "SMS Service": Send confirmation code via SMS
+        activate "SMS Service"
+        alt SMS Service failure
+            App -> User: Error: Unable to send SMS. Try again later.
+            App -> LoggingService: Log SMS service failure
+            deactivate "SMS Service"
+        else SMS sent successfully
+            "SMS Service" -> User: Deliver confirmation code
+            App -> LoggingService: Log SMS sent successfully
+            deactivate "SMS Service"
+        end
+    end
+end
+
+' User enters confirmation code
+User -> App: Enter confirmation code
+App -> Database: Fetch stored code, expiry, and failed attempts
+App -> App: Check code validity
+alt Code expired
+    App -> User: Error: Code expired. Request a new code.
+    App -> LoggingService: Log failed attempt (expired)
+else Invalid code
+    App -> Database: Increment failed attempts
+    App -> LoggingService: Log invalid code attempt
+    alt Max attempts exceeded
+        App -> User: Error: Maximum attempts reached. Try again later.
+        App -> LoggingService: Log max attempts exceeded
+        deactivate App
+        return
+    else Attempts within limit
+        App -> User: Error: Invalid code. Try again.
+    end
+else Valid code
+    App -> Database: Update user status to "Verified"
+    App -> LoggingService: Log successful verification
+    App -> User: Verification successful
+end
+deactivate App
+
+' Resend logic
+User -> App: Request code resend
+activate App
+App -> Database: Check sliding window rate limit for resends
+alt Resend limit exceeded
+    App -> User: Error: Too many resends. Try again later.
+    App -> LoggingService: Log resend limit exceeded
+    deactivate App
+else Resend limit within limits
+    App -> App: Generate new confirmation code and expiry
+    App -> Database: Update code and expiry
+    App -> "SMS Service": Send new confirmation code
+    activate "SMS Service"
+    alt SMS Service failure
+        App -> User: Error: Unable to resend SMS. Try again later.
+        App -> LoggingService: Log SMS resend failure
+        deactivate "SMS Service"
+    else SMS resent successfully
+        "SMS Service" -> User: Deliver new confirmation code
+        App -> LoggingService: Log SMS resend successful
+        deactivate "SMS Service"
+    end
+end
+deactivate App
+
+' Backup and Recovery
+App -> BackupService: Backup verification data periodically
+BackupService -> App: Acknowledge backup success
+
+@enduml

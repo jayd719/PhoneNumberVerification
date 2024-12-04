@@ -1,0 +1,82 @@
+@startuml serverInter
+actor User
+participant "System" as System
+participant "SMS Service" as SMS
+participant "Database" as DB
+participant "Logging Service" as Log
+participant "Backup Service" as Backup
+
+== Phone Number Submission ==
+User -> System: Submit phone number
+System -> System: Validate phone number format
+alt Invalid phone number
+    System -> Log: Log invalid attempt
+    System --> User: Error: Invalid phone number
+else Valid phone number
+    System -> System: Check sliding window rate limit
+    alt Rate limit exceeded
+        System -> Log: Log rate limit violation
+        System --> User: Error: Too many requests. Try again later.
+    else Within rate limit
+        System -> System: Generate confirmation code
+        System -> System: Generate expiry timestamp
+        System -> DB: Store encrypted data (phone, code, expiry)
+        System -> Log: Log code generation
+        System -> SMS: Send confirmation code via SMS
+        alt SMS Service failure
+            SMS -> Log: Log SMS failure
+            System --> User: Error: Unable to send SMS
+        else SMS sent successfully
+            SMS -> Log: Log SMS success
+            SMS --> User: Deliver confirmation code
+        end
+    end
+end
+
+== Confirmation Code Submission ==
+User -> System: Enter confirmation code
+System -> DB: Fetch stored code, expiry, and attempts
+System -> System: Validate entered code
+alt Code expired
+    System -> Log: Log expired code attempt
+    System --> User: Error: Code expired. Request new code.
+else Invalid code
+    System -> System: Increment failed attempts
+    System -> Log: Log invalid code attempt
+    alt Max attempts exceeded
+        System -> Log: Log max attempts exceeded
+        System --> User: Error: Max attempts exceeded. Try again later.
+    else Within limit
+        System --> User: Error: Invalid code. Try again.
+    end
+else Valid code
+    System -> DB: Update user status to "Verified"
+    System -> Log: Log successful verification
+    System --> User: Verification successful
+end
+
+== Code Resend Request ==
+User -> System: Request code resend
+System -> System: Check sliding window rate limit for resends
+alt Resend limit exceeded
+    System -> Log: Log resend limit exceeded
+    System --> User: Error: Too many resends. Try again later.
+else Within resend limit
+    System -> System: Generate new code and expiry
+    System -> DB: Update code and expiry
+    System -> Log: Log new code generation
+    System -> SMS: Send new confirmation code
+    alt SMS Service failure
+        SMS -> Log: Log SMS failure
+        System --> User: Error: Unable to send SMS
+    else SMS sent successfully
+        SMS -> Log: Log SMS success
+        SMS --> User: Deliver new confirmation code
+    end
+end
+
+
+System -> Backup: Backup verification data
+Backup --> System: Acknowledge backup success
+
+@enduml

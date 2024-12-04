@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number Confirmation Documentation</title>
+    <link rel="stylesheet" href="report.css">
+</head>
+<body>
+      
+    
+    <main>
+        <h1 style="margin-top: 5%; text-align: center;" >Phone Number Verification</h1>
+        <hr style="margin-bottom: 5%;">
+        <div id="index"></div>
+        <h2>Overview</h2>
+        <p>The project requires a multi-tier API system to handle user authentication via SMS verification. The Frontend must allow users to submit phone numbers and verify codes. The API Layer needs a gateway to process REST API calls, enforce rate limits, and route requests. The Business Logic Layer must include a core system for processing requests, an SMS service (e.g., Twilio) for sending codes, and a logging service for event tracking. The Data Layer requires a secure database to store user data and verification codes. Additional requirements include scalability, error handling, performance monitoring, and integration with cloud hosting and CI/CD pipelines.</p>
+        
+        <h3>API Layered Architecture</h3>
+        <p>This API Layered Architecture Diagram outlines a multi-tiered system for handling user requests. The User Interface Layer interacts directly with users, allowing them to submit phone numbers and verify codes via a frontend app. These requests are routed through the API Layer, where the API Gateway handles REST API calls, enforces rate limits via a Rate Limiter, and forwards valid requests to the Business Logic Layer. Here, the Core System processes the requests, coordinates with the SMS Service to send verification codes, and logs activities through the Logging Service. The Data Layer ensures user data is stored and retrieved securely</p>
+        <h5>Top Level Diagram</h5>
+        <div id="diagram1"></div>
+        
+        <h3>Implemenation</h3>
+        <p>To implement this architecture, start with the Frontend by creating a web or mobile app to handle user input and API calls. Set up an API Gateway (e.g., AWS API Gateway, Nginx) to process requests, enforce rate limits, and route traffic. Integrate a Rate Limiter using libraries like Redis or tools like Kong. Implement the Business Logic Layer with microservices for the core logic, an SMS Service (e.g., Twilio) to send codes, and a Logging Service (e.g., ELK stack) for event logging. Use a Database (e.g., MySQL, PostgreSQL) in the Data Layer for secure data storage and retrieval.</p>
+        <h5>Generic Sequnce Diagram</h5>
+        <div id="diagram2"></div>
+
+
+        <h2>Technology Stack</h2>
+        <ul>
+            <li>
+              <strong>Frontend (User Interface Layer):</strong>
+              <ul>
+                <li>Web App: Javascript,Tailwind</li>
+              </ul>
+            </li>
+            <li>
+              <strong>API Layer:</strong>
+              <ul>
+                <li>Framework:Flask</li>
+                <li>API Gateway:NGINX</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Business Logic Layer:</strong>
+              <ul>
+                <li>Language: Python</li>
+                <li>Services: Twilio</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Data Layer:</strong>
+              <ul>
+                <li>Database:MySQL</li>
+                <li>For logging: ElasticSearch</li>
+              </ul>
+            </li>
+          </ul>
+
+          <div id="diagram3"></div>
+          <p>This tech stack is modern, scalable, and developer-friendly. JavaScript with Tailwind CSS ensures a responsive and visually appealing frontend, simplifying UI development. Flask, a lightweight and flexible Python framework, enables rapid API development. NGINX serves as a robust API gateway, ensuring secure, high-performance request handling. Python in the Business Logic Layer offers simplicity and rich libraries for integrating services like Twilio for SMS. MySQL provides a reliable relational database, while ElasticSearch enhances log storage and search capabilities. Together, this stack supports scalability, maintainability, and efficient development, making it ideal for building robust, production-ready API-based applications.</p>
+          
+
+    </main>
+    <footer style="color: aliceblue;">
+        <a href="http://jashandeep.co.uk">© 2024 jashandeep.co.uk</a>
+    </footer>
+    <script src="SVG.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
+

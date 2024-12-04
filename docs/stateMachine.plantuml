@@ -1,0 +1,27 @@
+@startuml statemac
+title State Machine for API Interactions
+
+[*] --> Start
+
+Start --> PhoneNumberSubmitted : User submits phone number
+PhoneNumberSubmitted --> RateLimitExceeded : Rate limit breached
+PhoneNumberSubmitted --> VerificationCodeSent : Phone number validated
+
+RateLimitExceeded --> Start : Wait until rate limit resets
+
+VerificationCodeSent --> VerificationPending : SMS sent successfully
+VerificationCodeSent --> RetryMechanism : SMS failure
+
+RetryMechanism --> VerificationCodeSent : Retry SMS
+RetryMechanism --> Start : Max retries reached
+
+VerificationPending --> CodeExpired : Code expires
+VerificationPending --> CodeVerified : User enters valid code
+VerificationPending --> RetryMechanism : Invalid code
+
+CodeExpired --> VerificationCodeSent : User requests a new code
+CodeExpired --> Start : User abandons the process
+
+CodeVerified --> [*] : Verification successful
+
+@enduml

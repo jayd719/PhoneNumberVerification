@@ -1,0 +1,42 @@
+@startuml req
+title Simplified Sequence Diagram for Non-Technical Audiences
+
+actor User
+participant "System" as System
+participant "SMS Service" as SMSService
+
+User -> System: Submit Phone Number
+System -> System: Validate phone number
+alt Invalid phone number
+    System -> User: Show "Invalid phone number" error
+else Valid phone number
+    System -> SMSService: Send confirmation code
+    alt SMS service failure
+        System -> User: Show "Unable to send SMS. Try later." error
+    else SMS sent successfully
+        System -> User: Show "Code sent" message
+    end
+end
+
+User -> System: Enter Confirmation Code
+System -> System: Validate confirmation code
+alt Code invalid/expired
+    System -> User: Show "Invalid or expired code" error
+else Code valid
+    System -> User: Show "Verification successful" message
+end
+
+User -> System: Request Resend Code
+System -> System: Check resend limit
+alt Resend limit exceeded
+    System -> User: Show "Too many resends. Try later." error
+else Resend allowed
+    System -> SMSService: Send new confirmation code
+    alt SMS service failure
+        System -> User: Show "Unable to resend code. Try later." error
+    else SMS sent successfully
+        System -> User: Show "New code sent" message
+    end
+end
+
+@enduml

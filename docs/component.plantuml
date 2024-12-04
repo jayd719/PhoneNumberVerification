@@ -1,0 +1,38 @@
+@startuml palnt
+title Component Diagram with Interactions for API System
+
+package "User" {
+  [User Interface] as UserInterface
+}
+
+package "System" {
+  [API Gateway] as APIGateway
+  [Rate Limiter] as RateLimiter
+  [Verification Service] as VerificationService
+  [Logging Service] as LoggingService
+  [SMS Service] as SMSService
+  [Database] as Database
+}
+
+package "External Services" {
+  [Third-Party SMS Provider] as SMSProvider
+}
+
+UserInterface --> APIGateway : API Requests (POST/GET)
+APIGateway --> RateLimiter : Check rate limits
+RateLimiter --> APIGateway : Allow/Deny Request
+
+APIGateway --> VerificationService : Validate request
+VerificationService --> Database : Fetch/Store user data
+VerificationService --> SMSService : Request SMS sending
+VerificationService --> LoggingService : Log events
+
+SMSService --> SMSProvider : Send SMS
+SMSProvider --> SMSService : Delivery response
+
+VerificationService --> APIGateway : Respond to user
+
+APIGateway --> UserInterface : API Responses (JSON)
+LoggingService --> Database : Store logs for analytics
+
+@enduml

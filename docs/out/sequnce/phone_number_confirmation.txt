@@ -1,0 +1,36 @@
+                              Phone Number Confirmation in Django                          
+                                                                                           
+       ,-.                                                                                 
+       `-'                                                                                 
+       /|\                                                                                 
+        |                            ,------.                                 ,-----------.
+       / \                           |System|                                 |SMS Service|
+      User                           `--+---'                                 `-----+-----'
+       |      Submit phone number       ,-.                                         |      
+       | ------------------------------>|X|                                         |      
+       |                                |X|                                         |      
+       |                                |X|----.                                    |      
+       |                                |X|    | Generate 6-digit confirmation code |      
+       |                                |X|<---'                                    |      
+       |                                |X|                                         |      
+       |                                |X|     Send confirmation code via SMS     ,-.     
+       |                                |X| -------------------------------------->|X|     
+       |                                |X|                                        `-'     
+       |                         Deliver confirmation code                          |      
+       | <--------------------------------------------------------------------------|      
+       |                                |X|                                         |      
+       |    Enter confirmation code     |X|                                         |      
+       | ------------------------------>|X|                                         |      
+       |                                |X|                                         |      
+       |                                |X|----.                                    |      
+       |                                |X|    | Validate confirmation code         |      
+       |                                |X|<---'                                    |      
+       |                                `-'                                         |      
+       | Verification successful/failed |                                           |      
+       | <-------------------------------                                           |      
+      User                           ,--+---.                                 ,-----+-----.
+       ,-.                           |System|                                 |SMS Service|
+       `-'                           `------'                                 `-----------'
+       /|\                                                                                 
+        |                                                                                  
+       / \                                                                                 

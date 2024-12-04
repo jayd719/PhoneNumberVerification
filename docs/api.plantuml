@@ -1,0 +1,103 @@
+@startuml API
+title API Interaction Diagram with Retry and Rate Limiting
+
+actor User
+participant "API Gateway" as APIGateway
+participant "System" as System
+participant "Rate Limiter" as RateLimiter
+participant "Database" as Database
+participant "SMS Service" as SMSService
+participant "Logging Service" as LoggingService
+
+== Phone Number Submission ==
+User -> APIGateway: POST /phone/submit
+APIGateway -> RateLimiter: Check rate limit
+alt Rate limit exceeded
+    RateLimiter -> APIGateway: Rate limit error
+    APIGateway -> User: 429 Too Many Requests
+else Within rate limit
+    RateLimiter -> APIGateway: Allowed
+    APIGateway -> System: Validate phone number
+    alt Invalid phone number
+        System -> LoggingService: Log invalid phone number
+        System -> APIGateway: Error response
+        APIGateway -> User: 400 Invalid phone number
+    else Valid phone number
+        System -> LoggingService: Log successful submission
+        System -> Database: Store phone number
+        APIGateway -> User: 200 Phone number submitted
+    end
+end
+
+
+== Confirmation Code Submission ==
+User -> APIGateway: POST /code/send
+APIGateway -> RateLimiter: Check rate limit
+alt Rate limit exceeded
+    RateLimiter -> APIGateway: Rate limit error
+    APIGateway -> User: 429 Too Many Requests
+else Within rate limit
+    RateLimiter -> APIGateway: Allowed
+    APIGateway -> System: Generate confirmation code
+    System -> Database: Store code with expiry
+    System -> SMSService: Send SMS
+    alt SMS service failure
+        SMSService -> LoggingService: Log SMS failure
+        SMSService -> APIGateway: Error response
+        APIGateway -> User: 500 Unable to send SMS
+        loop Retry mechanism
+            APIGateway -> SMSService: Retry sending SMS
+        end
+    else SMS sent successfully
+        SMSService -> LoggingService: Log SMS success
+        APIGateway -> User: 200 Code sent
+    end
+end
+
+
+== Code Resend Request ==
+User -> APIGateway: POST /code/verify
+APIGateway -> RateLimiter: Check rate limit
+alt Rate limit exceeded
+    RateLimiter -> APIGateway: Rate limit error
+    APIGateway -> User: 429 Too Many Requests
+else Within rate limit
+    RateLimiter -> APIGateway: Allowed
+    APIGateway -> System: Fetch code from database
+    alt Code invalid or expired
+        System -> LoggingService: Log failed verification
+        System -> APIGateway: Error response
+        APIGateway -> User: 400 Invalid or expired code
+    else Code valid
+        System -> LoggingService: Log successful verification
+        System -> Database: Update user as verified
+        APIGateway -> User: 200 Verification successful
+    end
+end
+
+
+== Periodic Backup ==
+User -> APIGateway: POST /code/resend
+APIGateway -> RateLimiter: Check rate limit
+alt Rate limit exceeded
+    RateLimiter -> APIGateway: Rate limit error
+    APIGateway -> User: 429 Too Many Requests
+else Within rate limit
+    RateLimiter -> APIGateway: Allowed
+    APIGateway -> System: Generate new confirmation code
+    System -> Database: Update code and expiry
+    System -> SMSService: Send SMS
+    alt SMS service failure
+        SMSService -> LoggingService: Log SMS failure
+        SMSService -> APIGateway: Error response
+        APIGateway -> User: 500 Unable to resend SMS
+        loop Retry mechanism
+            APIGateway -> SMSService: Retry sending SMS
+        end
+    else SMS sent successfully
+        SMSService -> LoggingService: Log SMS success
+        APIGateway -> User: 200 Code resent
+    end
+end
+
+@enduml
