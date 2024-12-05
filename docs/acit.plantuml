@@ -1,0 +1,45 @@
+@startuml act
+title Activity Diagram for API Interactions
+
+start
+:User starts the process;
+
+:Submit phone number;
+if (Phone number valid?) then (Yes)
+    :Send verification SMS;
+    if (SMS sent successfully?) then (Yes)
+        :Await user input (Verification Code);
+        if (Code valid?) then (Yes)
+            :Verification successful;
+            stop
+        else (No)
+            if (Code expired?) then (Yes)
+                :Request new code;
+                :Resend verification SMS;
+                :while (Await user input (Verification Code));
+            elseif (No)
+                :Retry with invalid code;
+                :while (Await user input (Verification Code));
+            endif
+        endif
+    else (No)
+        if (Retry limit reached?) then (Yes)
+            :Notify user of SMS failure;
+            stop
+        else (No)
+            :Retry sending SMS;
+             :while (Send verification SMS);
+        endif
+    endif
+else (No)
+    if (Rate limit reached?) then (Yes)
+        :Notify user to wait for rate limit reset;
+        :Restart the process;
+         :while (Submit phone number);
+    else (No)
+        :Restart the process;
+         :while (Submit phone number);
+    endif
+endif
+
+@enduml

@@ -13,7 +13,7 @@ function generateIndex(containerId = "index") {
         container.id = containerId;
         document.body.insertBefore(container, document.body.firstChild);
     }
-    container.innerHTML = "<h2>Table of Contents</h2>";
+    container.innerHTML = "<h3 style='margin-top:15px;'>Table of Contents</h3>";
 
     const indexList = document.createElement("ul");
     indexList.style.padding=0
@@ -49,5 +49,5 @@ let id2 = "diagram2"
 insertSVG(id,svg7)
 insertSVG(id2,svg)
 insertSVG("diagram3",svg8)
-insertSVG("diagram4",svg6)
+insertSVG("diagram4",svg9)
 insertSVG("diagram5",svg5)

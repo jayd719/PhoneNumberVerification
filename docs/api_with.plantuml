@@ -1,11 +1,11 @@
 @startuml marked
 actor User
 
-box "API Gateway: NGINX" #LightBlue
+box "API Gateway: NGINX" 
 participant API_Gateway
 end box
 
-box "System: Flask (Python)" #LightGoldenRodYellow
+box "System: Flask (Python)"
 participant System
 end box
 

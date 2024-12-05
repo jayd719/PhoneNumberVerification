@@ -1,10 +1,10 @@
 @startuml serverInter
 actor User
-participant "System" as System
+boundary "System" as System
 participant "SMS Service" as SMS
-participant "Database" as DB
 participant "Logging Service" as Log
 participant "Backup Service" as Backup
+database "Database" as DB
 
 == Phone Number Submission ==
 User -> System: Submit phone number

@@ -1,37 +1,62 @@
 @startuml layers
-title API Layered Architecture Diagram
-
-rectangle "User Interface Layer" {
-    actor "User" as User
-    rectangle "Frontend (Web/App)" as Frontend
+title Architecture Diagram
+left to right direction
+skinparam backgroundColor Honeydew
+skinparam rectangle {
+    FontColor Black
+    FontSize 12
+    BorderColor Black
+    RoundCorner 15
+}
+skinparam actor {
+    FontColor Black
+    FontSize 12
+    BackgroundColor LightSteelBlue
+    BorderColor Black
+}
+skinparam database {
+    BackgroundColor LightPink
+    BorderColor DarkRed
 }
 
-rectangle "API Layer" {
-    rectangle "API Gateway" as APIGateway
+rectangle "User Interface Layer" #LightSkyBlue {
+    actor "User" as User #DodgerBlue
+    rectangle "Frontend (Web/App)" as Frontend #DeepSkyBlue
 }
 
-rectangle "Business Logic Layer" {
-    rectangle "Rate Limiter" as RateLimiter
-    rectangle "Core System" as System
-    rectangle "SMS Service" as SMSService
-    rectangle "Logging Service" as LoggingService
+rectangle "API Layer" #LightGoldenrodYellow {
+    rectangle "API Gateway" as APIGateway #Gold
 }
 
-rectangle "Data Layer" {
-    database "Database" as Database
+rectangle "Business Logic Layer" #PaleGreen {
+    rectangle "Rate Limiter" as RateLimiter #MediumSeaGreen
+    rectangle "Core System" as System #SpringGreen
+    rectangle "SMS Service" as SMSService #LimeGreen
+    rectangle "Logging Service" as LoggingService #DarkGreen
 }
 
-User -> Frontend: Submit phone number\nRequest code\nVerify code
-Frontend -> APIGateway: REST API Calls\n(e.g., /phone/submit)
-APIGateway -d-> RateLimiter: Check rate limits
-RateLimiter --> APIGateway: Allow/Deny
+rectangle "Data Layer" #Lavender {
+    database "Database" as Database #Plum
+}
 
-APIGateway -> System: Process request
-System -d-> Database: Store/Fetch user data
-System -u-> SMSService: Send confirmation code
-System -> LoggingService: Log events
-SMSService -> LoggingService: Log SMS status
+' Define arrow colors for better visibility
+skinparam Arrow {
+    Color Black
+    Thickness 2
+    FontSize 11
+}
 
-Frontend <-- APIGateway: Responses\n(200 OK, 400 Error, etc.)
+' Arrows with descriptions
+User -[#RoyalBlue]d-> Frontend: Submit phone number\nRequest code\nVerify code
+Frontend -[#DarkOrange]-> APIGateway: REST API Calls\n(e.g., /phone/submit)
+APIGateway --[#Red]d-> RateLimiter: Check rate limits
+RateLimiter -[#Green]-> APIGateway: Allow/Deny
+
+APIGateway -[#Purple]-> System: Process request
+System --[#DarkRed]r-> Database: Store/Fetch user data
+System --[#Indigo]-> SMSService: Send confirmation code
+SMSService -[#Orange]l-> LoggingService: Log SMS status
+
+Frontend <--[#RoyalBlue]-- APIGateway: Responses\n(200 OK, 400 Error, etc.)
 
 @enduml
