@@ -39,15 +39,3 @@ function generateIndex(containerId = "index") {
 generateIndex();
 
 
-function insertSVG(id,svg){    
-    document.getElementById(id).innerHTML=svg    
-}
-
-let id = "diagram1"
-let id2 = "diagram2"
-
-insertSVG(id,svg7)
-insertSVG(id2,svg)
-insertSVG("diagram3",svg8)
-insertSVG("diagram4",svg9)
-insertSVG("diagram5",svg5)
