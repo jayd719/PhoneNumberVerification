@@ -27,8 +27,7 @@ def hello_world():
     logger.info("Home page accessed.")
     return render_template("poster1.html")
 
-def new_function_add_for():
-    return "ds"    
+
 
 if __name__ == "__main__":
     logger.info("Starting the Flask application.")
