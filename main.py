@@ -29,6 +29,9 @@ def hello_world():
 
 
 
+def new_feature_from_2():
+    return "hel"
+
 if __name__ == "__main__":
     logger.info("Starting the Flask application.")
     app.run()
