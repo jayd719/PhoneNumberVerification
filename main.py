@@ -18,9 +18,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 @app.before_request
 def log_request_info():
-    logger.info(f"Request from {request.remote_addr} for {request.path} with {request.user_agent}")
+    logger.info(
+        f"Request from {request.remote_addr} for {request.path} with {request.user_agent}"
+    )
+
 
 @app.route("/")
 def hello_world():
@@ -28,9 +32,14 @@ def hello_world():
     return render_template("poster1.html")
 
 
-
 def new_feature_from_2():
     return "hel"
+
+
+@app.route("/hiome/")
+def create_task_4():
+    return "s"
+
 
 if __name__ == "__main__":
     logger.info("Starting the Flask application.")
