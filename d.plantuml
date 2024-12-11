@@ -1,0 +1,35 @@
+@startuml FlaskImageUpload
+!define AWSS3 <<AWS>>
+
+skinparam packageStyle rect
+skinparam shadowing false
+skinparam ArrowColor #0073e6
+skinparam componentStyle uml2
+
+package "Client Browser" {
+    [Browser]
+}
+
+package "Flask Image Upload Application" {
+    [Flask App] #LightBlue
+    [Upload Module]
+    [Logging Module]
+    [Templates]
+    [Static Files]
+    [Image Processing Module]
+}
+
+[Browser] --> [Flask App] : HTTP Request (Upload/Access)
+
+[Flask App] --> [Upload Module] : Handles Upload Logic
+[Flask App] --> [Logging Module] : Logs Requests & Errors
+[Flask App] --> [Templates] : Renders HTML Templates
+[Flask App] --> [Image Processing Module] : Processes Images
+
+[Upload Module] --> [Static Files] : Saves Uploaded Files
+[Image Processing Module] --> [Static Files] : Saves Processed Images
+
+[Static Files] --> [Browser] : Returns Processed Images
+[Templates] --> [Browser] : Sends Rendered HTML
+
+@enduml

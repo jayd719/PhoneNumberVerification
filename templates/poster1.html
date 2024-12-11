@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Upload</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <h1>File Upload Page</h1>
+    
+    <form action="/upload" hx-post="/upload" hx-swap="outerHTML" method="post" enctype="multipart/form-data">
+      <img id="preview" alt="Image Preview">
+      <label for="file">Choose a file:</label>
+      <input type="file" id="file" name="file" required />
+      <br /><br />
+      <button   type="submit">Upload</button>
+    </form>
+    <script src="/static/app.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  </body>
+</html>
+
