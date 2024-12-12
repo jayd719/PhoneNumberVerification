@@ -1,0 +1,32 @@
+@startuml DeploymentDiagram
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam ArrowColor #0073e6
+
+package "Client Device" as ClientDevice {
+    [Browser]
+}
+
+node "Web Server" as WebServer {
+    [Flask App]
+    [Upload Module]
+    [Logging Module]
+    [Image Processing Module]
+    [Templates]
+    [Static Files]
+}
+
+node "Cloud Storage" as CloudStorage <<AWS>> {
+    [S3 Bucket]
+}
+
+node "Database" as Database {
+    [Metadata Storage]
+}
+
+ClientDevice --> WebServer : HTTP Requests
+WebServer --> CloudStorage : Uploads & Retrieves Files
+WebServer --> Database : Stores & Retrieves Metadata
+WebServer --> ClientDevice : Sends Processed Images & HTML
+
+@enduml
