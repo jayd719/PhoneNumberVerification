@@ -1,0 +1,27 @@
+@startuml seq
+actor User as U
+participant "Python Script" as PS
+participant "File System" as FS
+
+U -> PS : Run script with project_path
+PS -> PS : Parse Arguments (project_path)
+PS -> FS : Create project_path directory
+
+group Directory Creation
+    loop For each directory in project_structure
+        PS -> FS : Create directory
+        alt If directory is "cache" or "log"
+            PS -> FS : Add .gitkeep file
+        end
+    end
+end
+
+group File Creation
+    loop For each file in project_structure
+        PS -> FS : Create file
+        PS -> FS : Write placeholder content
+    end
+end
+
+PS -> U : Print success message
+@enduml
