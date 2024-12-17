@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+    <script src="/static/theme.js"></script>
+    <div class="drawer">
+        <input id="my-drawer-3" type="checkbox" class="drawer-toggle" /> 
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <div id="navbar"></div>
+            <div id="about" class="container mx-auto px-4 py-16"></div>
+            <div id="education" class="container mx-auto px-4 py-16"></div>
+            <footer id="footer"></footer>
+        </div> 
+        <div class="drawer-side">
+            <label for="my-drawer-3" class="drawer-overlay"></label> 
+            <ul class="menu p-4 w-80 h-full bg-base-200" id="mobileMenu">
+                <!-- Sidebar content here -->
+            </ul>
+        </div>
+    </div>
+    <script src="/static/svg.js"></script>
+    <script src="/static/homepage.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNavbar();
+            renderMobileMenu();
+            renderAbout();;
+            renderEducation();
+            renderFooter();
+});
+
+
+    </script>
+</body>
+</html>
+

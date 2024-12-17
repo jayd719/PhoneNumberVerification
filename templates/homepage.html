@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD's Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-base-50">
+    <div id="background"></div>
+    <script src="static/theme.js"></script>
+    <div class="drawer">
+        <input id="my-drawer-3" type="checkbox" class="drawer-toggle" /> 
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <div id="navbar"></div>
+            <!-- Page content here -->
+            <div id="hero" class="container mx-auto px-4 py-16"></div>
+            <div id="skills" class="container mx-auto px-4 py-16"></div>
+            <div id="technologies" class="container mx-auto px-4 py-16"></div>
+            
+            <div id="projects"></div>
+
+            <div id="callToAction"></div>
+            <footer id="footer"></footer>
+        </div> 
+        <div class="drawer-side">
+            <label for="my-drawer-3" class="drawer-overlay"></label> 
+            <ul class="menu p-4 w-80 h-full bg-base-200" id="mobileMenu">
+                <!-- Sidebar content here -->
+            </ul>
+        </div>
+    </div>
+    
+    <script src="/static/svg.js"></script>
+    <script src="/static/homepage.js"></script>
+    <script src="/static/footer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBackground()
+            renderNavbar();
+            renderMobileMenu();
+            renderHero();
+            renderSkills();
+            renderTechnologies();
+            renderProjects();
+            
+            renderCallToAction();
+            createFooter()
+            
+});
+
+
+    </script>
+
+    
+</body>
+</html>
+

@@ -21,24 +21,21 @@ logger = logging.getLogger(__name__)
 
 @app.before_request
 def log_request_info():
+    # for {request.path} with {request.user_agent}"
     logger.info(
-        f"Request from {request.remote_addr} for {request.path} with {request.user_agent}"
+        f"Request from {request.remote_addr} "
     )
 
 
 @app.route("/")
-def hello_world():
-    logger.info("Home page accessed.")
-    return render_template("poster1.html")
+def homepage():
+    return render_template("homepage.html")
+
+@app.route("/about/")
+def aboutpage():
+    return render_template("about.html")
 
 
-def new_feature_from_2():
-    return "hel"
-
-
-@app.route("/hiome/")
-def create_task_4():
-    return "s"
 
 
 if __name__ == "__main__":
