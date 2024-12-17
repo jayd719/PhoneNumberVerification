@@ -43,7 +43,7 @@ function createNavLink(href, icon, text) {
 
 function createNavButton(href, icon, text) {
     return `
-        <li><a href="${href}" class="${maggicButton1}">
+        <li><a onclick="my_modal_2.showModal();" class="${maggicButton1}">
             ${icon}
             ${text}
         </a></li>
@@ -54,13 +54,8 @@ function renderHero() {
     const hero = document.getElementById('hero');
     hero.innerHTML = `
         <div class="hero min-h-screen bg-base-200">
-            <div class="hero-content text-center">
-                <div class="max-w-md">
-                    <h1 id="outputObject1" class="text-5xl font-bold">My name is JD</h1>
-                    <p class="py-6"  >I'm a junior-year computer science student. Explore my educational background, skills, and projects.</p>
-                    <a href="/education" class="btn btn-primary mr-2">Education</a>
-                    <a href="/experience" class="btn btn-secondary">Experience</a>
-                </div>
+            <div class="p-4">
+                ${banner}
             </div>
         </div>
     `;
@@ -85,8 +80,8 @@ function createSkillCard(image, title, description) {
     return `
         <div class="card bg-base-200 shadow-xl">
             <figure><img src="${image}" alt="${title}" class="w-full h-48 object-cover" /></figure>
-            <div class="card-body text-secondary">
-                <h3 class="card-title text-primary">${title}</h3>
+            <div class="card-body ">
+                <h3 class="card-title ">${title}</h3>
                 <p>${description}</p>
             </div>
         </div>
@@ -159,7 +154,7 @@ const manufacturing = [
 
 function renderCallToAction() {
     const callToAction = document.getElementById('callToAction');
-    callToAction.className="bg-base-200 py-16"
+    callToAction.className="bg-base-200 py-16 mt-16"
     callToAction.innerHTML = `
         <div class="hero">
             <div class="hero-content text-center">
@@ -182,7 +177,7 @@ function renderCallToAction() {
 
 // Define helper function to create social links
 function createSocialLink(href, icon) {
-    css ="btn mx-2 btn-outline btn-primary text-center"
+    css ="btn mx-2 btn-accent text-center"
     return `
       <a href="${href}" target="_blank" rel="noopener noreferrer" class="${css}">
         <span>${icon}</span>
@@ -192,6 +187,16 @@ function createSocialLink(href, icon) {
 
 
 
+ function renderFooter() {
+    const footer = document.createElement('div');
+    footer.className="bg-base-300"
+    footer.innerHTML = `
+      <div class="footer-credits text-center py-2">
+        <p>&copy; 2024 jashandeep.co.uk</p>
+      </div>
+    `;
+    document.body.appendChild(footer)
+  }
   
   function renderAbout() {
     const about = document.getElementById('about');
@@ -203,7 +208,7 @@ function createSocialLink(href, icon) {
                     <h1 class="text-5xl font-bold">About Me</h1>
                     <p class="py-6">I'm a passionate computer science student with a keen interest in software development, data analysis, and machine learning. My journey in tech has equipped me with a diverse skill set and a problem-solving mindset.</p>
                     <p class="py-6">When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or enjoying a good book on software architecture.</p>
-                    <a href="#skills" class="btn btn-primary">Check out my skills</a>
+                    <a href="#skills" class="btn btn-accent">Check out my skills</a>
                 </div>
             </div>
         </div>
@@ -230,12 +235,12 @@ function renderProjects() {
 
 function createProjectCard(title, description, link,span="") {
     return `
-        <div class="card bg-base-200 shadow-xl ${span}">
-            <div class="card-body text-secondary">
-                <h3 class="card-title text-primary text-primary">${title}</h3>
+        <div class="pop card bg-base-200 shadow-xl ${span}">
+            <div class="card-body ">
+                <h3 class="card-title  ">${title}</h3>
                 <p>${description}</p>
                 <div class="card-actions justify-end">
-                    <a href="${link}" class="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">View Project</a>
+                    <a href="${link}" class="btn btn-sm btn-accent" target="_blank" rel="noopener noreferrer">View Project</a>
                 </div>
             </div>
         </div>
@@ -281,10 +286,39 @@ function renderBackground() {
     opacity-10 blur-3xl 
     bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%
   `;
-    document.body.appendChild(backgroundDiv);
-
-
-    
+    document.body.appendChild(backgroundDiv);    
   }
 
+
   
+function addContactDiv(){
+    const di = document.createElement("div")
+    di.innerHTML=`<dialog id="my_modal_2" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl shadow-3xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <div class="flex flex-col mx-auto text-center">
+      <p class="mt-5 py-5 font-bold text-xl mb-3">I'm always eager to collaborate on exciting projects or discuss opportunities</p>
+      <aside class="">
+        <h2 class="text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-none my-5">
+          If you like what you see...<br>
+        <span class="text-error font-bold">Let's connect</span>
+      </h2>
+      </aside> 
+      <ul class="menu flex flex-col md:flex-row mx-auto gap-4 w-full justify-center">
+          ${createSocialLink("https://github.com/jayd719", "github")}
+          ${createSocialLink("https://www.linkedin.com/in/jashansingh65/", "linkedin")}
+        ${createSocialLink("mailto:jsingh0779@gmail.com", "mail")}
+      </ul>
+      <p class="mt-5 py-5 italic font-bold">Thank you for visiting my portfolio! I look forward to connecting with you</p>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>`
+
+document.body.appendChild(di)
+}

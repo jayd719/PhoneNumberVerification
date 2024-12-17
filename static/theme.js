@@ -86,4 +86,4 @@ class ThemeController {
   }
   
   // Example usage
-  const themeController = new ThemeController("garden", "luxury");
+  const themeController = new ThemeController("acid", "dracula");

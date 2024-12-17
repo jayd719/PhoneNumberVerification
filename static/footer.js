@@ -38,21 +38,11 @@ function createFooter() {
     container.appendChild(contentDiv);
     footer.appendChild(container);
   
-    console.log('Footer HTML structure:');
-    console.log(footer.outerHTML);
   
     document.body.appendChild(footer);
   }
   
-  function renderFooter() {
-    const footer = document.createElement('div');
-    footer.className="bg-base-300"
-    footer.innerHTML = `
-      <div class="footer-credits text-center py-2">
-        <p>&copy; 2024 jashandeep.co.uk</p>
-      </div>
-    `;
-  }
+  
   function createList(title, items) {
     const ul = document.createElement('ul');
     ul.className = 'my-10 text-md';
@@ -95,4 +85,7 @@ function createFooter() {
   
     return ul;
   }
+
+
+ 
   

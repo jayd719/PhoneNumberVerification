@@ -14,7 +14,7 @@ function animateTextLetterByLetter(text, elementId, typingSpeed, startDelay, dur
   console.log(outputElement)
 
   // Apply default styling (optional; can be customized)
-  outputElement.className ="mt-4 text-4xl text-zinc-500 dark:text-zinc-400 font-light";
+  outputElement.className ="py-6 text-3xl font-bold font-base-100";
 
   // Start the animation after a delay
   setTimeout(() => {
@@ -36,11 +36,3 @@ function animateTextLetterByLetter(text, elementId, typingSpeed, startDelay, dur
   }, startDelay);
 }
 
-// Usage example:
-animateTextLetterByLetter(
-  "My name is JD, a junior-year computer science student. Explore my educational background, skills, and projects",
-  "outputObject1",
-  20,    // Typing speed: 60ms per letter
-  2000,  // Start delay: 1 second
-  10000  // Duration: 10 seconds
-);
